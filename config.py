@@ -6,7 +6,6 @@ class Config(object):
         self.label_file = './data/tag.txt'
         self.train_file = './data/train.txt'
         self.dev_file = './data/dev.txt'
-        self.test_file = './data/test.txt'
         self.vocab = './data/bert/vocab.txt'
         self.max_length = 300
         self.use_cuda = False
@@ -17,7 +16,7 @@ class Config(object):
         self.bert_embedding = 768
         self.dropout1 = 0.5
         self.dropout_ratio = 0.5
-        self.rnn_layer = 1
+        self.rnn_layer = 2
         self.lr = 0.0001
         self.lr_decay = 0.00001
         self.weight_decay = 0.00005

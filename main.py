@@ -20,7 +20,7 @@ def train(**kwargs):
     print('loading corpus')
     vocab = load_vocab(config.vocab)
     label_dic = load_vocab(config.label_file)
-    tagset_size = len(label_dic)
+    target_size = len(label_dic)
     train_data = read_corpus(config.train_file, max_length=config.max_length, label_dic=label_dic, vocab=vocab)
     dev_data = read_corpus(config.dev_file, max_length=config.max_length, label_dic=label_dic, vocab=vocab)
 
@@ -37,7 +37,7 @@ def train(**kwargs):
 
     dev_dataset = TensorDataset(dev_ids, dev_masks, dev_tags)
     dev_loader = DataLoader(dev_dataset, shuffle=True, batch_size=config.batch_size)
-    model = BERT_LSTM_CRF(config.bert_path, tagset_size, config.bert_embedding, config.rnn_hidden, config.rnn_layer, dropout_ratio=config.dropout_ratio, dropout1=config.dropout1, use_cuda=config.use_cuda)
+    model = BERT_LSTM_CRF(config.bert_path, target_size, config.bert_embedding, config.rnn_hidden, config.rnn_layer, dropout_ratio=config.dropout_ratio, dropout1=config.dropout1, use_cuda=config.use_cuda)
     if config.load_model:
         assert config.load_path is not None
         model = load_model(model, name=config.load_path)
@@ -57,14 +57,15 @@ def train(**kwargs):
             if config.use_cuda:
                 inputs, masks, tags = inputs.cuda(), masks.cuda(), tags.cuda()
             feats = model(inputs, masks)
-            loss = model.loss(feats, masks,tags)
+            loss = model.loss(feats, masks, tags)
             loss.backward()
             optimizer.step()
             if step % 50 == 0:
                 print('step: {} |  epoch: {}|  loss: {}'.format(step, epoch, loss.item()))
         loss_temp = dev(model, dev_loader, epoch, config)
         if loss_temp < eval_loss:
-            save_model(model,epoch)
+            save_model(model, epoch)
+            eval_loss = loss_temp
 
 
 def dev(model, dev_loader, epoch, config):
@@ -80,7 +81,7 @@ def dev(model, dev_loader, epoch, config):
         if config.use_cuda:
             inputs, masks, tags = inputs.cuda(), masks.cuda(), tags.cuda()
         feats = model(inputs, masks)
-        path_score, best_path = model.crf(feats, masks.byte())
+        path_score, best_path = model.crf(feats, masks)
         loss = model.loss(feats, masks, tags)
         eval_loss += loss.item()
         pred.extend([t for t in best_path])

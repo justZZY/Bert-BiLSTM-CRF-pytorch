@@ -1,0 +1,5 @@
+data/bert/pytorch_model.bin
+result/
+result/best/
+.idea/
+__pycache__/
