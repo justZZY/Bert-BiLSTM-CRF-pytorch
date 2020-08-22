@@ -7,6 +7,7 @@ from utils import transform_sentence, load_reverse_vocab
 if __name__ == '__main__':
     config = Config()
     sentence = '李白是我国著名的刺客'
+    # sentence = '哈哈哈哈哈'
     in_str, inputs, masks = transform_sentence(sentence)
     # 加载模型
     model_path = 'result/best/model.pt'
