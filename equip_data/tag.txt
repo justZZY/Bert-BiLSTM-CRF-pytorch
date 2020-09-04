@@ -1,0 +1,9 @@
+<pad>
+B-EQUIP
+I-EQUIP
+E-EQUIP
+B-TAG
+E-TAG
+O
+<start>
+<eos>

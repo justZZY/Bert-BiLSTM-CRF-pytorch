@@ -45,7 +45,10 @@ class BERT_LSTM_CRF(nn.Module):
         embeds, _ = self.word_embeds(sentence, attention_mask=attention_mask)
         hidden = self.rand_init_hidden(batch_size)
         if embeds.is_cuda:
-            hidden = (i.cuda() for i in hidden)
+            ans_list = []
+            for i in hidden:
+                ans_list.append(i.cuda())
+            hidden = tuple(ans_list)
         lstm_out, hidden = self.lstm(embeds, hidden)
         lstm_out = lstm_out.contiguous().view(-1, self.hidden_dim*2)
         d_lstm_out = self.dropout1(lstm_out)

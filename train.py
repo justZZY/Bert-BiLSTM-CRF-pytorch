@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from config import Config
+from config2 import Config2
 from model import BERT_LSTM_CRF
 import torch.optim as optim
 from utils import load_vocab, read_corpus, load_model, save_model
@@ -12,7 +12,7 @@ import fire
 
 
 def train(**kwargs):
-    config = Config()
+    config = Config2()
     config.update(**kwargs)
     print('当前设置为:\n', config)
     if config.use_cuda:
